@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Callable, Dict, List
 
 from .state import State
 
@@ -16,14 +16,18 @@ class StateManager:
         statevalues: List[any] = [],
         metadatas: List[Dict] = [],
         currentstateid: str = None,
+        callbacks: Dict[str, Dict[str, List[Callable]]] = {},
         dependencies: Dict[str, List[str]] = {},
     ):
         
         assert currentstateid != None and currentstateid in stateids, "currentstateid must be in stateids"
+
+        all_entry_callbacks = [callbacks[stateid]["entry_callbacks"] for stateid in stateids]
+        all_exit_callbacks = [callbacks[stateid]["exit_callbacks"] for stateid in stateids]
         
         self.states = {
-            stateid: State(stateid, is_current=stateid == currentstateid, value=statevalue, metadata=metadata) 
-            for stateid, statevalue, metadata in zip(stateids, statevalues, metadatas)
+            stateid: State(stateid, is_current=stateid == currentstateid, value=statevalue, metadata=metadata, entry_callbacks=entry_callbacks, exit_callbacks=exit_callbacks) 
+            for stateid, statevalue, metadata, entry_callbacks, exit_callbacks in zip(stateids, statevalues, metadatas, all_entry_callbacks, all_exit_callbacks)
         }
 
         if len(dependencies) == 0:
