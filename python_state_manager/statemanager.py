@@ -27,8 +27,8 @@ class StateManager:
             all_entry_callbacks = [callbacks[stateid]["entry_callbacks"] for stateid in stateids]
             all_exit_callbacks = [callbacks[stateid]["exit_callbacks"] for stateid in stateids]
         else:
-            all_entry_callbacks = {stateid: {"entry_callbacks": [], "exit_callbacks": []} for stateid in stateids}
-            all_exit_callbacks = {stateid: {"entry_callbacks": [], "exit_callbacks": []} for stateid in stateids}
+            all_entry_callbacks = [[] for stateid in stateids]
+            all_exit_callbacks = [[] for stateid in stateids]
         
         self.states = {
             stateid: State(stateid, is_current=stateid == currentstateid, value=statevalue, metadata=metadata, entry_callbacks=entry_callbacks, exit_callbacks=exit_callbacks) 
